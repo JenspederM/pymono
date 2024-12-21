@@ -3,6 +3,7 @@ name = "pymono"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
+license = { file = "LICENSE" }
 authors = [{ name = "Jens Peder Meldgaard", email = "JensPederM@gmail.com" }]
 requires-python = ">=3.11"
 dependencies = ["fire>=0.7.0", "jinja2"]
