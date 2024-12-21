@@ -1,0 +1,7 @@
+from {{ package_name }} import main
+
+
+def test_main():
+    assert main() == "Hello from {{ package_name }}!", (
+        f"Expected 'Hello from {{ package_name }}!', got main()"
+    )
