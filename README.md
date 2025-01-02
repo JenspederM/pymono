@@ -10,6 +10,16 @@ cd pymono
 pip install .
 ```
 
+## Features
+
+- [x] List all packages in the monorepo
+- [x] Add a package to the monorepo
+- [x] Create a Matrix Strategy for a GitHub Actions workflow
+- [x] Identify changed packages in a pull request
+- [x] Run tests for changed packages in a pull request
+- [ ] Run tests for all packages in the monorepo
+- [ ] Run tests for a specific package in the monorepo
+
 ## Usage
 
 ```bash

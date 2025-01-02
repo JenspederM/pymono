@@ -16,10 +16,10 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.uv.workspace]
-members = ["packages/package-a", "packages/package-b", "packages/package-d"]
+members = ["packages/*", "libs/*"]
 
 [dependency-groups]
-dev = ["pytest>=8.3.4", "pytest-cov>=6.0.0"]
+dev = ["commitizen>=4.1.0", "pytest>=8.3.4", "pytest-cov>=6.0.0"]
 
 [tool.pytest.ini_options]
 addopts = """
@@ -33,3 +33,41 @@ addopts = """
 fail_under = 0
 show_missing = true
 exclude_lines = ["pragma: no cover", "raise NotImplementedError"]
+
+[tool.commitizen]
+name = "cz_customize"
+tag_format = "$version"
+version_scheme = "pep440"
+version_provider = "pep621"
+update_changelog_on_bump = true
+major_version_zero = true
+use_shortcuts = true
+
+[tool.commitizen.customize]
+message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
+example = "feature: this feature enable customize through config file"
+schema = "<type>: <body>"
+schema_pattern = "(feature|bug fix):(\\s.*)"
+bump_pattern = "^(break|new|fix|hotfix)"
+bump_map = { "break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH" }
+change_type_order = ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]
+
+[[tool.commitizen.customize.questions]]
+type = "list"
+name = "change_type"
+choices = [
+  { value = "feature", name = "feature: A new feature." },
+  { value = "bug fix", name = "bug fix: A bug fix." },
+]
+# choices = ["feature", "fix"]  # short version
+message = "Select the type of change you are committing"
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "message"
+message = "Body."
+
+[[tool.commitizen.customize.questions]]
+type = "confirm"
+name = "show_message"
+message = "Do you want to add body message in commit?"
