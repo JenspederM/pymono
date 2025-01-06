@@ -6,7 +6,11 @@ readme = "README.md"
 license = { file = "LICENSE" }
 authors = [{ name = "Jens Peder Meldgaard", email = "JensPederM@gmail.com" }]
 requires-python = ">=3.11"
-dependencies = ["fire>=0.7.0", "jinja2"]
+dependencies = [
+    "fire>=0.7.0",
+    "jinja2",
+    "package-d",
+]
 
 [project.scripts]
 pymono = "pymono:main"
@@ -16,7 +20,10 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.uv.workspace]
-members = ["packages/package-a", "packages/package-b", "packages/package-d"]
+members = ["packages/package-a", "packages/package-b", "packages/package-d", "packages/package-c"]
+
+[tool.uv.sources]
+package-d = { workspace = true }
 
 [dependency-groups]
 dev = ["pytest>=8.3.4", "pytest-cov>=6.0.0"]
