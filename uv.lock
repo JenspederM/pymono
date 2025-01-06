@@ -193,6 +193,7 @@ name = "package-c"
 version = "0.1.0"
 source = { editable = "packages/package-c" }
 dependencies = [
+    { name = "package-b" },
     { name = "package-d" },
 ]
 
@@ -203,7 +204,10 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "package-d", editable = "packages/package-d" }]
+requires-dist = [
+    { name = "package-b", editable = "packages/package-b" },
+    { name = "package-d", editable = "packages/package-d" },
+]
 
 [package.metadata.requires-dev]
 dev = [

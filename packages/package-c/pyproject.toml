@@ -8,6 +8,7 @@ authors = [
 ]
 requires-python = ">=3.11"
 dependencies = [
+    "package-b",
     "package-d",
 ]
 
@@ -75,6 +76,7 @@ use_shortcuts = true
 
 [tool.uv.sources]
 package-d = { workspace = true }
+package-b = { workspace = true }
 
 [dependency-groups]
 dev = [
