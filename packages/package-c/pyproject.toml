@@ -1,5 +1,5 @@
 [project]
-name = "package-a"
+name = "package-c"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -8,11 +8,10 @@ authors = [
 ]
 requires-python = ">=3.11"
 dependencies = [
-    "package-b",
 ]
 
 [project.scripts]
-package-a = "package_a:main"
+package-c = "package_c:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -22,7 +21,7 @@ build-backend = "hatchling.build"
 addopts = """
 --cov-report=term \
 --cov-report=xml:coverage.xml \
---cov=package_a \
+--cov=package_c \
 -ra
 -vv"""
 
@@ -73,8 +72,6 @@ update_changelog_on_bump = true
 major_version_zero = true
 use_shortcuts = true
 
-[tool.uv.sources]
-package-b = { workspace = true }
 
 [dependency-groups]
 dev = [

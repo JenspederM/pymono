@@ -49,7 +49,7 @@ jobs:
         run: |
           echo "Path: ${{ matrix.inputs.path }}"
           echo "Name: ${{ matrix.inputs.name }}"
-          echo "Shared: ${{ matrix.inputs.shared }}"
+          echo "Dependents: ${{ matrix.inputs.dependents }}"
       - name: "Check if ${{ matrix.inputs.name }} has changed"
         uses: dorny/paths-filter@v3
         id: changes
@@ -57,38 +57,12 @@ jobs:
           filters: |
             is_changed:
               - '${{ matrix.inputs.path }}/**'
-            is_shared_changed:
-              - 'packages/shared/**'
-      - name: Install uv
-        if: ${{ steps.changes.outputs.is_changed == 'true' || steps.changes.outputs.is_shared_changed == 'true' }}
-        uses: astral-sh/setup-uv@v4
-      - name: Sync
-        if: ${{ steps.changes.outputs.is_changed == 'true' || steps.changes.outputs.is_shared_changed == 'true' }}
-        run: uv sync --directory ${{ matrix.inputs.path }} --all-extras --dev
-      - name: Test
-        if: ${{ steps.changes.outputs.is_changed == 'true' || steps.changes.outputs.is_shared_changed == 'true' }}
-        run: uv run --directory ${{ matrix.inputs.path }} pytest tests
-      - name: Coverage comment
-        if: ${{ steps.changes.outputs.is_changed == 'true' || steps.changes.outputs.is_shared_changed == 'true' }}
-        uses: MishaKav/pytest-coverage-comment@main
+            dependent_changed: ${{ matrix.inputs.dependents }}
+      - name: UV Test
+        uses: ./.github/actions/uvtest
+        if: ${{ steps.changes.outputs.is_changed == 'true' || steps.changes.outputs.dependent_changed == 'true' }}
         with:
-          github-token: ${{ github.token }}
-          unique-id-for-comment: ${{ matrix.inputs.name }}
-          title: "Coverage report for '${{ matrix.inputs.name }}'"
-          pytest-xml-coverage-path: "${{ matrix.inputs.path }}/coverage.xml"
-      - name: Sync Shared
-        # TODO : This is a temporary solution, we need to find a better way to handle shared packages
-        if: ${{ steps.changes.outputs.is_changed == 'true' || steps.changes.outputs.is_shared_changed == 'true' }}
-        run: uv sync --all-extras --dev
-      - name: Test Shared
-        # TODO : This is a temporary solution, we need to find a better way to handle shared packages
-        if: ${{ steps.changes.outputs.is_changed == 'true' || steps.changes.outputs.is_shared_changed == 'true' }}
-        run: uv run pytest tests
-      - name: Coverage comment
-        if: ${{ steps.changes.outputs.is_changed == 'true' || steps.changes.outputs.is_shared_changed == 'true' }}
-        uses: MishaKav/pytest-coverage-comment@main
-        with:
-          github-token: ${{ github.token }}
-          unique-id-for-comment: "shared"
-          title: "Coverage report for 'shared'"
-          pytest-xml-coverage-path: "coverage.xml"
+          name: ${{ matrix.inputs.name }}
+          path: ${{ matrix.inputs.path }}
+          is_changed: ${{ steps.changes.outputs.is_changed }}
+          dependent_changed: ${{ steps.changes.outputs.dependent_changed }}
