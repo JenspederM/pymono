@@ -64,5 +64,4 @@ jobs:
         with:
           name: ${{ matrix.inputs.name }}
           path: ${{ matrix.inputs.path }}
-          is_changed: ${{ steps.changes.outputs.is_changed }}
-          dependent_changed: ${{ steps.changes.outputs.dependent_changed }}
+          github_token: ${{ github.token }}
