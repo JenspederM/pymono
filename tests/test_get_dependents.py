@@ -25,7 +25,7 @@ def test_get_dependents():
 
     dependents = get_dependents(projects)
     assert dependents == {
-        "project1": [p2, p3],
-        "project2": [p3],
-        "project3": [],
+        "project1": [],
+        "project2": [p1],
+        "project3": [p2, p1],
     }

@@ -10,6 +10,13 @@ def add_project_standards(package_dir: Path):
     _add_pyproject_defaults(package_dir, package_name)
 
 
+def create_filter(project_path: Path, dependents: list[Path]) -> str:
+    deps = [(p.path / "**").as_posix() for p in dependents]
+    if not deps:
+        return _render("filter.yml.j2", path=project_path.as_posix())
+    return _render("filter.yml.j2", path=project_path.as_posix(), dependencies=deps)
+
+
 def _render(template_name: str, **kwargs) -> str:
     """Render a jinja2 template
 

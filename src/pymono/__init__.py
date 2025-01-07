@@ -1,8 +1,10 @@
+from __future__ import annotations
 import subprocess
 import fire
 
 from pymono.github import find_projects, get_includes, set_github_output
 from pymono.template import add_project_standards
+from pymono.types import Include
 from pymono.utils import find_git_root, has_uv
 
 
@@ -46,7 +48,7 @@ class PyMono:
             raise FileNotFoundError(f"Package {package_name} not found")
         return package_path.relative_to(self._packages_root.parent).as_posix()
 
-    def matrix_strategy(self, key: str, dry_run: bool = False):
+    def matrix_strategy(self, key: str, dry_run: bool = False) -> list[Include]:
         """Set the matrix strategy for the mono-repo
 
         Args:

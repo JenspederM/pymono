@@ -45,18 +45,16 @@ jobs:
         run: |
           echo "Path: ${{ matrix.inputs.path }}"
           echo "Name: ${{ matrix.inputs.name }}"
-          echo "Dependents: ${{ matrix.inputs.dependents }}"
+          echo "Dependencies: ${{ matrix.inputs.dependencies }}"
+          echo "Filters:\n${{ matrix.inputs.filter }}"
       - name: "Check if ${{ matrix.inputs.name }} has changed"
         uses: dorny/paths-filter@v3
         id: changes
         with:
-          filters: |
-            is_changed:
-              - '${{ matrix.inputs.path }}/**'
-            dependent_changed: ${{ matrix.inputs.dependents }}
+          filters: ${{ matrix.inputs.filter }}
       - name: UV Test
         uses: ./.github/actions/uvtest
-        if: ${{ steps.changes.outputs.is_changed == 'true' || steps.changes.outputs.dependent_changed == 'true' }}
+        if: ${{ steps.changes.outputs.is_changed == 'true' }}
         with:
           name: ${{ matrix.inputs.name }}
           path: ${{ matrix.inputs.path }}
