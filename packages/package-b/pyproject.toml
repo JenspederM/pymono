@@ -7,7 +7,9 @@ authors = [
     { name = "Jens Peder Meldgaard", email = "jpm@halfspace.io" }
 ]
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "package-c",
+]
 
 [project.scripts]
 package-b = "package_b:main"
@@ -70,6 +72,9 @@ version_provider = "pep621"
 update_changelog_on_bump = true
 major_version_zero = true
 use_shortcuts = true
+
+[tool.uv.sources]
+package-c = { workspace = true }
 
 [dependency-groups]
 dev = [
