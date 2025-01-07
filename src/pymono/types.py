@@ -14,3 +14,10 @@ class Project:
     version: str
     path: Path
     dependencies: list[Dependency]
+
+
+@dataclass
+class Include:
+    path: str
+    name: str
+    dependencies: list[str]

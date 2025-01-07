@@ -2,8 +2,8 @@ import json
 import os
 from pathlib import Path
 import tomllib
-from typing import Any
 
+from pymono.template import create_filter
 from pymono.types import Dependency, Project
 
 
@@ -39,21 +39,24 @@ def find_projects(root="."):
 def get_includes(projects: dict[str, Project]):
     includes = []
     dependents = get_dependents(list(projects.values()))
+
     for project in projects.values():
-        includes.append(
-            {
-                "path": project.path.as_posix(),
-                "name": project.name,
-                "dependents": [
-                    (p.path / "**").as_posix() for p in dependents.get(project.name, [])
-                ],
-            }
-        )
+        include = {
+            "path": project.path.as_posix(),
+            "name": project.name,
+            "dependencies": json.dumps(
+                [(p.path / "**").as_posix() for p in dependents.get(project.name, [])]
+            ),
+            "filter": create_filter(project.path, dependents.get(project.name, [])),
+        }
+        print(f"------- {project.name}\n{include['filter']}")
+
+        includes.append(include)
 
     return includes
 
 
-def set_github_output(key: str, value: Any):
+def set_github_output(key: str, value: list[dict[str, str]]):
     include_statement = json.dumps({key: value})
     msg = f"matrix={include_statement}"
     print(f"Set GITHUB_OUTPUT to:\n{msg}")
@@ -66,12 +69,11 @@ def set_github_output(key: str, value: Any):
 
 def _get_dependents(project: Project, projects: list[Project]):
     dependents = []
-    for other in projects:
-        if project.name == other.name:
-            continue
-        if any(project.name == dep.name for dep in other.dependencies):
-            dependents.append(other)
-            dependents.extend(_get_dependents(other, projects))
+    for dep in project.dependencies:
+        dep_project = next((p for p in projects if p.name == dep.name), None)
+        if dep_project:
+            dependents.append(dep_project)
+            dependents.extend(_get_dependents(dep_project, projects))
     return dependents
 
 

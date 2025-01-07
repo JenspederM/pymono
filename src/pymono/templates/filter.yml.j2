@@ -1,0 +1,11 @@
+{%- if dependencies is defined -%}
+dependencies: &dependencies
+{%- for dep in dependencies %}
+  - {{ dep -}}
+{% endfor %}
+{% endif %}
+is_changed:
+{%- if dependencies is defined %}
+  - *dependencies
+{% endif %}
+  - {{ path }}/**
