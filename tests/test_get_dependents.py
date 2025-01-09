@@ -1,5 +1,5 @@
 from pymono.types import Dependency, Project
-from pymono.github import get_dependents
+from pymono.github import get_dependencies
 
 
 def test_get_dependents():
@@ -23,7 +23,7 @@ def test_get_dependents():
     )
     projects = [p1, p2, p3]
 
-    dependents = get_dependents(projects)
+    dependents = get_dependencies(projects)
     assert dependents == {
         "project1": [],
         "project2": [p1],

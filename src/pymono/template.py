@@ -1,20 +1,9 @@
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
+from pymono.utils import find_git_root
+
 TEMPLATES_DIR = Path(__file__).parent / "templates"
-
-
-def add_project_standards(package_dir: Path):
-    package_name = package_dir.name.replace("-", "_")
-    _create_tests(package_dir / "tests", package_name)
-    _add_pyproject_defaults(package_dir, package_name)
-
-
-def create_filter(project_path: Path, dependents: list[Path]) -> str:
-    deps = [(p.path / "**").as_posix() for p in dependents]
-    if not deps:
-        return _render("filter.yml.j2", path=project_path.as_posix())
-    return _render("filter.yml.j2", path=project_path.as_posix(), dependencies=deps)
 
 
 def _render(template_name: str, **kwargs) -> str:
@@ -32,7 +21,31 @@ def _render(template_name: str, **kwargs) -> str:
     return template.render(**kwargs)
 
 
-def _create_tests(tests_dir: Path, package_name: str):
+def create_devcontainer(
+    package_name: str,
+    dockerfile_path: Path,
+    base_version: str,
+    spark_version: str,
+    uv_version: str,
+):
+    return _render(
+        "devcontainer.json.j2",
+        PROJECT_NAME=package_name,
+        DOCKERFILE_PATH=dockerfile_path,
+        BASE_VERSION=base_version,
+        SPARK_VERSION=spark_version,
+        UV_VERSION=uv_version,
+    )
+
+
+def create_filter(project_path: Path, dependents: list[Path]) -> str:
+    deps = [(p.path / "**").as_posix() for p in dependents]
+    if not deps:
+        return _render("filter.yml.j2", path=project_path.as_posix())
+    return _render("filter.yml.j2", path=project_path.as_posix(), dependencies=deps)
+
+
+def create_tests(tests_dir: Path, package_name: str):
     main_template = _render("tests_init.py.j2", package_name=package_name)
     tests_dir.mkdir()
     (tests_dir / "__init__.py").write_text("")
@@ -40,7 +53,7 @@ def _create_tests(tests_dir: Path, package_name: str):
     (tests_dir / "conftest.py").write_text("import pytest")
 
 
-def _add_pyproject_defaults(package_dir: Path, package_name: str):
+def add_pyproject_defaults(package_dir: Path, package_name: str):
     init_template = _render("package_init.py.j2", package_name=package_name)
     template_file = _render("pyproject.toml.j2", package_name=package_name)
     (package_dir / "src" / package_name / "__init__.py").write_text(init_template)

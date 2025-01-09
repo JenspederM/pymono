@@ -1,0 +1,56 @@
+{
+    "name": "",
+    "build": {
+        "dockerfile": "../../Dockerfile",
+        "args": {
+            "BASE_VERSION": "ubuntu-22.04",
+            "SPARK_VERSION": "3.5.4",
+            "UV_VERSION": "0.5.15"
+        }
+    },
+    "remoteUser": "vscode",
+    "mounts": [
+        "source=projectname-bashhistory,target=/home/vscode/commandhistory,type=volume",
+        "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
+    ],
+    "postCreateCommand": "git config --global --add safe.directory $PWD",
+    "postStartCommand": "uv sync && uv add pre-commit && uv run pre-commit autoupdate --repo https://github.com/pre-commit/pre-commit-hooks && uv run pre-commit install",
+    "postAttachCommand": ". ~/.venv/bin/activate",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "charliermarsh.ruff",
+                "redhat.vscode-yaml",
+                "tamasfe.even-better-toml",
+                "ms-python.python"
+            ],
+            "settings": {
+                "python.terminal.activateEnvInCurrentTerminal": true,
+                "python.defaultInterpreterPath": "home/vscode/.venv/bin/python",
+                "editor.tabSize": 4,
+                "terminal.integrated.inheritEnv": true,
+                "terminal.integrated.defaultProfile.linux": "zsh",
+                "terminal.integrated.profiles.linux": {
+                    "bash": {
+                        "path": "bash",
+                        "icon": "terminal-bash"
+                    },
+                    "zsh": {
+                        "path": "zsh"
+                    },
+                    "fish": {
+                        "path": "fish"
+                    },
+                    "tmux": {
+                        "path": "tmux",
+                        "icon": "terminal-tmux"
+                    },
+                    "pwsh": {
+                        "path": "pwsh",
+                        "icon": "terminal-powershell"
+                    }
+                }
+            }
+        }
+    }
+}

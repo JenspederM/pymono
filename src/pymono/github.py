@@ -38,7 +38,7 @@ def find_projects(root="."):
 
 def get_includes(projects: dict[str, Project]):
     includes = []
-    dependents = get_dependents(list(projects.values()))
+    dependents = get_dependencies(list(projects.values()))
 
     for project in projects.values():
         include = {
@@ -67,18 +67,18 @@ def set_github_output(key: str, value: list[dict[str, str]]):
         raise RuntimeError("GITHUB_OUTPUT environment variable not set")
 
 
-def _get_dependents(project: Project, projects: list[Project]):
+def _recurse_dependencies(project: Project, projects: list[Project]):
     dependents = []
     for dep in project.dependencies:
         dep_project = next((p for p in projects if p.name == dep.name), None)
         if dep_project:
             dependents.append(dep_project)
-            dependents.extend(_get_dependents(dep_project, projects))
+            dependents.extend(_recurse_dependencies(dep_project, projects))
     return dependents
 
 
-def get_dependents(projects: list[Project]):
-    dependents: dict[str, list[Project]] = {project.name: [] for project in projects}
+def get_dependencies(projects: list[Project]):
+    dependencies: dict[str, list[Project]] = {project.name: [] for project in projects}
     for project in projects:
-        dependents[project.name] = _get_dependents(project, projects)
-    return dependents
+        dependencies[project.name] = _recurse_dependencies(project, projects)
+    return dependencies
