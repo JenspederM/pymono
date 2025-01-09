@@ -1,5 +1,5 @@
 {
-    "name": "",
+    "name": "package-c",
     "build": {
         "dockerfile": "../../Dockerfile",
         "args": {
