@@ -32,7 +32,10 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
       # Create git tag
       - name: Create tag
-        run: git tag -a v${{ steps.version.outputs.new_version }} -m "v${{ steps.version.outputs.new_version }}"
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "github_actions[bot]"
+          git tag -a v${{ steps.version.outputs.new_version }} -m "v${{ steps.version.outputs.new_version }}"
       - name: Upload release to GitHub
         uses: softprops/action-gh-release@v1
         env:
