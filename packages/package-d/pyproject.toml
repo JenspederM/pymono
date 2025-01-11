@@ -7,9 +7,7 @@ authors = [
     { name = "Jens Peder Meldgaard", email = "jenspederm@gmail.com" }
 ]
 requires-python = ">=3.11"
-dependencies = [
-    "pre-commit>=4.0.1",
-]
+dependencies = []
 
 [project.scripts]
 package-d = "package_d:main"
@@ -57,7 +55,7 @@ ignore = [
     "D417",
     "E501",
 ] # Ruff format takes care of line-too-long
-exclude = ["notebooks/*", "src/_deprecated/*"]
+exclude = ["notebooks/*"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["D", "UP"]
@@ -72,3 +70,9 @@ version_provider = "pep621"
 update_changelog_on_bump = true
 major_version_zero = true
 use_shortcuts = true
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+]
