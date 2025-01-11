@@ -5,8 +5,8 @@ Utilities for working with monorepos in Python.
 ## Installation
 
 ```bash
-git clone https://github.com/JenspederM/pymono
-cd pymono
+git clone https://github.com/JenspederM/uvmono
+cd uvmono
 pip install .
 ```
 
@@ -14,16 +14,16 @@ pip install .
 
 ```bash
 # Show help
-pymono --help
+uvmono --help
 
 # List all packages in the monorepo
-pymono list
+uvmono list
 
 # Add a package to the monorepo
-pymono new <package-name>
+uvmono new <package-name>
 
 # Create a Matrix Strategy for a GitHub Actions workflow
-pymono matrix_strategy <key-name>
+uvmono matrix_strategy <key-name>
 ```
 
 # Examples
@@ -31,14 +31,14 @@ pymono matrix_strategy <key-name>
 ## List all packages in the monorepo
 
 ```bash
-pymono list
+uvmono list
 ```
 
 ## Add a package to the monorepo
 
 Create a new package in the monorepo with the name `my-package`.
 ```bash
-pymono new my-package
+uvmono new my-package
 ```
 
 This will automatically create a new directory `packages/my-package` with the following structure:
@@ -61,7 +61,7 @@ This will automatically create a new directory `packages/my-package` with the fo
 
 Create a matrix strategy for a GitHub Actions workflow with the key `inputs`.
 ```bash
-pymono matrix_strategy inputs
+uvmono matrix_strategy inputs
 ```
 
 This will automatically generate a matrix strategy for the packages in the monorepo,
@@ -92,7 +92,7 @@ jobs:
         run: uv sync --all-extras --dev
       - name: Create Package Matrix
         id: matrix_strategy
-        run: uv run pymono matrix_strategy inputs
+        run: uv run uvmono matrix_strategy inputs
 
   test_package:
     runs-on: ubuntu-latest

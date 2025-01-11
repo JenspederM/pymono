@@ -1,8 +1,8 @@
-from pymono import PyMono
+from uvmono import uvmono
 
 
 def test_init():
-    p = PyMono()
+    p = uvmono()
     assert p._root.exists()
     assert p._packages_root.exists()
     assert p._packages

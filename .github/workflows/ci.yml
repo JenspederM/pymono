@@ -27,7 +27,7 @@ jobs:
 
       - name: Create Package Matrix
         id: package_matrix
-        run: uv run pymono matrix_strategy inputs
+        run: uv run uvmono matrix_strategy inputs
 
   test_package:
     runs-on: ubuntu-latest
