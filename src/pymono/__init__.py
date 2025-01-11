@@ -31,9 +31,9 @@ class PyMono:
         dir_cmd = ["--directory", str(package_dir)]
         default_packages = ["pytest", "pytest-cov"]
         subprocess.run(["uv", "init", "--package", *dir_cmd])
-        assert (
-            package_dir / "pyproject.toml"
-        ).exists(), f"Failed to create package: {package_name}"
+        assert (package_dir / "pyproject.toml").exists(), (
+            f"Failed to create package: {package_name}"
+        )
         add_project_standards(package_dir)
         subprocess.run(["uv", "add", *default_packages, "--dev", *dir_cmd])
         self.add_devcontainer(package_name=package_name)
@@ -66,14 +66,13 @@ class PyMono:
             return "Either `package_name` or `all` must be set. Use `--help` for more information."
         packages = self.list() if all else [package_name]
         self._create_docker_compose_file(
-            packages,
             ubuntu_version=ubuntu_version,
             spark_version=spark_version,
             uv_version=uv_version,
             dry_run=dry_run,
         )
         self._create_devcontainers(packages, dry_run=dry_run)
-        return f"Successfully created devcontainer configuration{''if all is True else 's'}"
+        return f"Successfully created devcontainer configuration{'' if all is True else 's'}"
 
     def _create_devcontainers(self, packages: list[str], dry_run=False):
         print(f"Adding devcontainer configuration to {', '.join(packages)}")
@@ -102,7 +101,7 @@ class PyMono:
             print(f"Successfully created devcontainer configuration for {package}")
 
     def _create_docker_compose_file(
-        self, packages, ubuntu_version, spark_version, uv_version, dry_run=False
+        self, ubuntu_version, spark_version, uv_version, dry_run=False
     ):
         compose = {
             "version": "3",
@@ -120,7 +119,7 @@ class PyMono:
                     "volumes": ["..:/workspace:cached"],
                     "command": "sleep infinity",
                 }
-                for package in packages
+                for package in self.list()
             },
         }
         if dry_run:
