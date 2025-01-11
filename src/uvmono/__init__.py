@@ -3,14 +3,14 @@ import subprocess
 import fire
 import yaml
 
-from pymono.github import find_projects, get_includes, set_github_output
-from pymono.template import add_project_standards, create_devcontainer
-from pymono.types import Include
-from pymono.utils import find_git_root, has_uv
+from uvmono.github import find_projects, get_includes, set_github_output
+from uvmono.template import add_project_standards, create_devcontainer
+from uvmono.types import Include
+from uvmono.utils import find_git_root, has_uv
 
 
-class PyMono:
-    """PyMono is a tool to help manage mono-repos in python"""
+class UvMono:
+    """uvmono is a tool to help manage mono-repos in python"""
 
     def __init__(self):
         self._root = find_git_root()
@@ -138,7 +138,7 @@ class PyMono:
             dry_run (bool, optional): Whether to run in dry-run mode. Defaults to False.
 
         Example:
-            $ pymono matrix-strategy python
+            $ uvmono matrix-strategy python
         """
         projects = find_projects()
         includes = get_includes(projects)
@@ -155,7 +155,7 @@ class PyMono:
 
 
 def main() -> None:
-    fire.Fire(PyMono)
+    fire.Fire(UvMono)
 
 
 if __name__ == "__main__":

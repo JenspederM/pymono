@@ -7,7 +7,7 @@ members = [
     "package-b",
     "package-c",
     "package-d",
-    "pymono",
+    "uvmono",
 ]
 
 [[package]]
@@ -367,7 +367,7 @@ wheels = [
 ]
 
 [[package]]
-name = "pymono"
+name = "uvmono"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

@@ -3,8 +3,8 @@ import os
 from pathlib import Path
 import tomllib
 
-from pymono.template import create_filter
-from pymono.types import Dependency, Project
+from uvmono.template import create_filter
+from uvmono.types import Dependency, Project
 
 
 def find_projects(root="."):
@@ -21,9 +21,7 @@ def find_projects(root="."):
         version = project.get("version")
         if not name or not version:
             raise ValueError(
-                f"Missing name or version in {toml}"
-                " | "
-                f"name={name}, version={version}"
+                f"Missing name or version in {toml} | name={name}, version={version}"
             )
 
         project_dependencies = project.get("dependencies", [])
