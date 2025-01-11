@@ -1,30 +1,28 @@
 [project]
-name = "package-a"
+name = "package-d"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-authors = [{ name = "Jens Peder Meldgaard", email = "jpm@halfspace.io" }]
+authors = [
+    { name = "Jens Peder Meldgaard", email = "jenspederm@gmail.com" }
+]
 requires-python = ">=3.11"
 dependencies = [
     "pre-commit>=4.0.1",
 ]
 
 [project.scripts]
-package-a = "package_a:main"
+package-d = "package_d:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.hatch.metadata]
-allow-direct-references = true
-exclude = ["tests/*", "notebooks/*"]
-
 [tool.pytest.ini_options]
 addopts = """
 --cov-report=term \
 --cov-report=xml:coverage.xml \
---cov=package_a \
+--cov=package_d \
 -ra
 -vv"""
 
@@ -59,11 +57,10 @@ ignore = [
     "D417",
     "E501",
 ] # Ruff format takes care of line-too-long
-exclude = ["notebooks/*"]
+exclude = ["notebooks/*", "src/_deprecated/*"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["D", "UP"]
-
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
@@ -75,6 +72,3 @@ version_provider = "pep621"
 update_changelog_on_bump = true
 major_version_zero = true
 use_shortcuts = true
-
-[dependency-groups]
-dev = ["pytest>=8.3.4", "pytest-cov>=6.0.0"]

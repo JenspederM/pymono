@@ -19,7 +19,7 @@ def find_git_root(root=__file__) -> Path:
     return root_path
 
 
-def has_uv(self):
+def has_uv():
     """Check if `uv` is installed"""
     has_uv = shutil.which("uv") or subprocess.run(["uv", "--version"]).returncode == 0
     if not has_uv:

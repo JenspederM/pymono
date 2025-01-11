@@ -3,11 +3,11 @@ name = "package-c"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-authors = [
-    { name = "Jens Peder Meldgaard", email = "jpm@halfspace.io" }
-]
+authors = [{ name = "Jens Peder Meldgaard", email = "jpm@halfspace.io" }]
 requires-python = ">=3.11"
 dependencies = [
+    "package-a",
+    "pre-commit>=4.0.1",
 ]
 
 [project.scripts]
@@ -72,9 +72,8 @@ update_changelog_on_bump = true
 major_version_zero = true
 use_shortcuts = true
 
+[tool.uv.sources]
+package-a = { workspace = true }
 
 [dependency-groups]
-dev = [
-    "pytest>=8.3.4",
-    "pytest-cov>=6.0.0",
-]
+dev = ["pytest>=8.3.4", "pytest-cov>=6.0.0"]

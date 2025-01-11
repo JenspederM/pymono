@@ -8,7 +8,9 @@ authors = [
 ]
 requires-python = ">=3.11"
 dependencies = [
+    "package-a",
     "package-c",
+    "pre-commit>=4.0.1",
 ]
 
 [project.scripts]
@@ -75,6 +77,7 @@ use_shortcuts = true
 
 [tool.uv.sources]
 package-c = { workspace = true }
+package-a = { workspace = true }
 
 [dependency-groups]
 dev = [

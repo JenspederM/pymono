@@ -52,7 +52,7 @@ jobs:
         id: changes
         with:
           filters: ${{ matrix.inputs.filter }}
-      - name: UV Test
+      - name: Test ${{ matrix.inputs.name }}
         uses: ./.github/actions/uvtest
         if: ${{ steps.changes.outputs.is_changed == 'true' }}
         with:

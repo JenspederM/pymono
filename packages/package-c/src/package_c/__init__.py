@@ -1,4 +1,3 @@
 def main() -> None:
-    msg = "Hello from package_c!" 
-    print(msg)
+    msg = "Hello from package_c!"
     return msg
