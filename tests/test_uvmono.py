@@ -1,8 +1,8 @@
-from uvmono import uvmono
+from uvmono import UvMono
 
 
 def test_init():
-    p = uvmono()
+    p = UvMono()
     assert p._root.exists()
     assert p._packages_root.exists()
     assert p._packages

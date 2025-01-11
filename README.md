@@ -22,8 +22,28 @@ uvmono list
 # Add a package to the monorepo
 uvmono new <package-name>
 
+# Add dev-containers for a package in the monorepo
+uvmono add-devcontainer <package-name>
+
+# Add dev-containers for all packages in the monorepo
+uvmono add-devcontainer --all
+
 # Create a Matrix Strategy for a GitHub Actions workflow
 uvmono matrix_strategy <key-name>
+# Returns a JSON object with the matrix strategy for the packages in the monorepo:
+# {
+#   "matrix": {
+#     "inputs": [ 
+#       { 
+#           "path": "packages/package1", 
+#           "name": "package1", 
+#           "dependencies": ["package2"], 
+#           "filter":  "..." # outputs `is_changed` in dorny/paths-filter@v3
+#       },
+#       ...
+#     ]
+#   }
+# }
 ```
 
 # Examples
