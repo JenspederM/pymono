@@ -3,15 +3,9 @@ name = "package-b"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-authors = [
-    { name = "Jens Peder Meldgaard", email = "jpm@halfspace.io" }
-]
-requires-python = ">=3.11"
-dependencies = [
-    "package-a",
-    "package-c",
-    "pre-commit>=4.0.1",
-]
+authors = [{ name = "Jens Peder Meldgaard", email = "jpm@halfspace.io" }]
+requires-python = ">=3.9"
+dependencies = ["package-a", "package-c", "pre-commit>=4.0.1"]
 
 [project.scripts]
 package-b = "package_b:main"
@@ -80,7 +74,4 @@ package-c = { workspace = true }
 package-a = { workspace = true }
 
 [dependency-groups]
-dev = [
-    "pytest>=8.3.4",
-    "pytest-cov>=6.0.0",
-]
+dev = ["pytest>=8.3.4", "pytest-cov>=6.0.0"]
