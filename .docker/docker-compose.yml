@@ -1,0 +1,46 @@
+services:
+    package-a:
+        build:
+            args:
+                SPARK_VERSION: 3.5.4
+                UBUNTU_VERSION: '22.04'
+                UV_VERSION: 0.5.15
+            context: ..
+            dockerfile: .docker/Dockerfile
+        command: sleep infinity
+        volumes:
+        - ..:/workspace:cached
+    package-b:
+        build:
+            args:
+                SPARK_VERSION: 3.5.4
+                UBUNTU_VERSION: '22.04'
+                UV_VERSION: 0.5.15
+            context: ..
+            dockerfile: .docker/Dockerfile
+        command: sleep infinity
+        volumes:
+        - ..:/workspace:cached
+    package-c:
+        build:
+            args:
+                SPARK_VERSION: 3.5.4
+                UBUNTU_VERSION: '22.04'
+                UV_VERSION: 0.5.15
+            context: ..
+            dockerfile: .docker/Dockerfile
+        command: sleep infinity
+        volumes:
+        - ..:/workspace:cached
+    package-d:
+        build:
+            args:
+                SPARK_VERSION: 3.5.4
+                UBUNTU_VERSION: '22.04'
+                UV_VERSION: 0.5.15
+            context: ..
+            dockerfile: .docker/Dockerfile
+        command: sleep infinity
+        volumes:
+        - ..:/workspace:cached
+version: '3'

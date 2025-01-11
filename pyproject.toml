@@ -6,11 +6,7 @@ readme = "README.md"
 license = { file = "LICENSE" }
 authors = [{ name = "Jens Peder Meldgaard", email = "JensPederM@gmail.com" }]
 requires-python = ">=3.11"
-dependencies = [
-    "fire>=0.7.0",
-    "jinja2",
-    "rich>=13.9.4",
-]
+dependencies = ["fire>=0.7.0", "jinja2", "pre-commit>=4.0.1", "rich>=13.9.4"]
 
 [project.scripts]
 pymono = "pymono:main"
@@ -19,8 +15,19 @@ pymono = "pymono:main"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "pyproject.toml", "README.md", "LICENSE"]
+exclude = ["packages", ".docker", ".github", ".devcontainer"]
+
 [tool.uv.workspace]
-members = ["packages/package-a", "packages/package-b", "packages/package-d", "packages/package-c"]
+members = [
+    "packages/package-a",
+    "packages/package-b",
+    "packages/package-c",
+    "packages/package-d",
+    "develop-eggs",
+]
 
 [dependency-groups]
 dev = ["pytest>=8.3.4", "pytest-cov>=6.0.0"]

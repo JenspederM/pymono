@@ -32,6 +32,17 @@ def _render(template_name: str, **kwargs) -> str:
     return template.render(**kwargs)
 
 
+def create_devcontainer(
+    package_name: str,
+    dockerfile_path: Path,
+):
+    return _render(
+        "devcontainer.json.j2",
+        package_name=package_name,
+        docker_compose_file=dockerfile_path,
+    )
+
+
 def _create_tests(tests_dir: Path, package_name: str):
     main_template = _render("tests_init.py.j2", package_name=package_name)
     tests_dir.mkdir()
