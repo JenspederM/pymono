@@ -21,15 +21,18 @@ jobs:
           fetch-depth: 0
       - name: Install uv
         uses: astral-sh/setup-uv@v4
-      - name: Sync kedro-databricks
+      - name: Sync Package
         run: uv sync
-      - name: Build package
+      - name: Build Package
         run: uv build
-      - name: Get version
+      - name: Get Package Version
         id: version
         run: echo "::set-output name=new_version::$(grep -m 1 version pyproject.toml | grep -e '\d.\d.\d' -o)"
-      - name: Publish package distributions to PyPI
+      - name: Publish Package Distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+      # Create git tag
+      - name: Create tag
+        run: git tag -a v${{ steps.version.outputs.new_version }} -m "v${{ steps.version.outputs.new_version }}"
       - name: Upload release to GitHub
         uses: softprops/action-gh-release@v1
         env:
