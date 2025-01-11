@@ -15,6 +15,15 @@ class UvMono:
     def __init__(self):
         self._root = find_git_root()
         self._packages_root = self._root / "packages"
+        if (
+            not self._packages_root.exists()
+            and input(
+                "Packages directory not found. Would you like to create it? (y/n)"
+            ).lower()
+            == "y"
+        ):
+            self._packages_root.mkdir()
+
         self._packages = [p for p in self._packages_root.iterdir() if p.is_dir()]
 
     def new(self, package_name: str):
