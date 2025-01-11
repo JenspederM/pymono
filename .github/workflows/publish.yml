@@ -9,7 +9,6 @@ jobs:
   pypi-publish:
     name: Upload release to PyPI
     runs-on: ubuntu-latest
-    if: ${{ needs.version.outputs.is_changed == 'true' }}
     strategy:
       matrix:
         python-version: ["3.9"]
@@ -24,7 +23,6 @@ jobs:
         with:
           token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
           fetch-depth: 0
-      - uses: databricks/setup-cli@main
       - name: Install uv
         uses: astral-sh/setup-uv@v4
         with:
@@ -33,13 +31,16 @@ jobs:
         run: uv sync
       - name: Build package
         run: uv build
+      - name: Get version
+        id: version
+        run: echo "::set-output name=new_version::$(grep -m 1 version pyproject.toml | grep -e '\d.\d.\d' -o)"
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
       - name: Upload release to GitHub
         uses: softprops/action-gh-release@v1
         env:
-          PACKAGE_NAME: ${{ needs.version.outputs.name }}
-          VERSION: ${{ needs.version.outputs.new_version }}
+          PACKAGE_NAME: uvmono
+          VERSION: ${{ steps.version.outputs.new_version }}
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           tag_name: ${{ env.VERSION }}
