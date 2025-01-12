@@ -60,7 +60,7 @@ runs:
         {
           echo "changelog<<EOF" >> $GITHUB_OUTPUT
           echo "$(cat body.md)" >> $GITHUB_OUTPUT
-          echo echo "EOF"
+          echo "EOF"
         } >> $GITHUB_OUTPUT
     - name: Find Comment
       if: ${{ inputs.pr_number != '' && steps.cz.outputs.version != steps.project.outputs.old_version }}
