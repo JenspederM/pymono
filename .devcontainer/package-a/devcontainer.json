@@ -8,7 +8,7 @@
     "source=package-a-bashhistory,target=/home/vscode/commandhistory,type=volume",
     "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
   ],
-  "postStartCommand": "uv sync && uv run pre-commit install",
+  "postStartCommand": "uv sync && uv run pre-commit install && uv run pre-commit install --hook-type commit-msg",
   "postAttachCommand": ". ~/.venv/bin/activate",
   "customizations": {
     "vscode": {

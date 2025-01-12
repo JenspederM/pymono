@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 authors = [
-    { name = "Jens Peder Meldgaard", email = "jenspederm@gmail.com" }
+    { name = "Jens Peder Meldgaard", email = "jenspederm@gmail.com" },
 ]
 requires-python = ">=3.11"
 dependencies = []
@@ -13,52 +13,56 @@ dependencies = []
 package-d = "package_d:main"
 
 [build-system]
-requires = ["hatchling"]
+requires = [
+    "hatchling",
+]
 build-backend = "hatchling.build"
 
 [tool.pytest.ini_options]
-addopts = """
---cov-report=term \
---cov-report=xml:coverage.xml \
---cov=package_d \
--ra
--vv"""
+addopts = "--cov-report=term --cov-report=xml:coverage.xml --cov=package_d -ra\n-vv"
 
 [tool.coverage.report]
 fail_under = 0
 show_missing = true
-exclude_lines = ["pragma: no cover", "raise NotImplementedError"]
-
-[tool.ruff.format]
-docstring-code-format = true
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+]
 
 [tool.ruff]
 line-length = 88
 show-fixes = true
 
+[tool.ruff.format]
+docstring-code-format = true
+
 [tool.ruff.lint]
 select = [
-    "E",    # pycodestyle
-    "F",    # pyflakes
-    "I",    # isort
-    "D",    # pydocstyle
-    "D401", # First line should be in imperative mood
+    "E",
+    "F",
+    "I",
+    "D",
+    "D401",
     "T201",
     "UP",
 ]
 ignore = [
     "UP006",
     "UP007",
-    # We actually do want to import from typing_extensions
     "UP035",
-    # Relax the convention by _not_ requiring documentation for every function parameter.
     "D417",
     "E501",
-] # Ruff format takes care of line-too-long
-exclude = ["notebooks/*"]
+]
+exclude = [
+    "notebooks/*",
+]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["D", "UP"]
+"tests/*" = [
+    "D",
+    "UP",
+]
+
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
@@ -69,37 +73,85 @@ version_scheme = "pep440"
 version_provider = "pep621"
 update_changelog_on_bump = true
 major_version_zero = true
-bump_message = "bump: package_d version $current_version → $new_version"
+bump_message = "bump: package_d $current_version → $new_version"
 tag_format = "package_d-$version"
 
 [tool.commitizen.customize]
 message_template = "{{change_type}}(package_d): {{message}}"
-example = "feature: this feature enable customize through config file"
-schema = "<change_type>: <body>"
-schema_pattern = "(feature|bug fix):(\\s.*)"
-bump_pattern = "^(break|new|fix|hotfix)"
-bump_map = { "break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH" }
-change_type_order = ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]
-commit_parser = "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?"
-changelog_pattern = "^(feature|bug fix)?(!)?"
-change_type_map = { "feature" = "Feat", "bug fix" = "Fix" }
+example = "feat(<package-name>): this feature enable customize through config file"
+schema = "<change_type>(\\(package_d\\)): <body>"
+schema_pattern = "(fix|feat|docs|style|refactor|perf|test|build|ci)(\\(package_d\\)):(\\s.*)"
+bump_pattern = "^(break|new|fix)"
+change_type_order = [
+    "BREAKING CHANGE",
+    "feat",
+    "fix",
+    "refactor",
+    "perf",
+]
+commit_parser = "^(?P<change_type>fix|feat|docs|style|refactor|perf|test|build|ci):\\s(?P<message>.*)?"
+changelog_pattern = "^(feat|fix)\\(package_d\\)(!)?:"
+
+[tool.commitizen.customize.bump_map]
+break = "MAJOR"
+new = "MINOR"
+fix = "PATCH"
+
+[tool.commitizen.customize.change_type_map]
+feat = "Feat"
+fix = "Fix"
+refactor = "Refactor"
+perf = "Perf"
 
 [[tool.commitizen.customize.questions]]
 type = "list"
 name = "change_type"
 message = "Select the type of change you are committing"
-choices = [
-    { key = "x", value = "fix", name = "fix: A bug fix. Correlates with PATCH in SemVer" },
-    { key = "f", value = "feat", name = "feat: A new feature. Correlates with MINOR in SemVer" },
-    { key = "d", value = "docs", name = "docs: Documentation only changes" },
-    { key = "s", value = "style", name = "style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)" },
-    { key = "r", value = "refactor", name = "refactor: A code change that neither fixes a bug nor adds a feature" },
-    { key = "p", value = "perf", name = "perf: A code change that improves performance" },
-    { key = "t", value = "test", name = "test: Adding missing or correcting existing tests" },
-    { key = "b", value = "build", name = "build: Changes that affect the build system or external dependencies (example scopes: pip, docker, npm)" },
-    { key = "c", value = "ci", name = "ci: Changes to CI configuration files and scripts (example scopes: GitLabCI)" },
-]
 
+[[tool.commitizen.customize.questions.choices]]
+key = "x"
+value = "fix"
+name = "fix: A bug fix. Correlates with PATCH in SemVer"
+
+[[tool.commitizen.customize.questions.choices]]
+key = "f"
+value = "feat"
+name = "feat: A new feature. Correlates with MINOR in SemVer"
+
+[[tool.commitizen.customize.questions.choices]]
+key = "d"
+value = "docs"
+name = "docs: Documentation only changes"
+
+[[tool.commitizen.customize.questions.choices]]
+key = "s"
+value = "style"
+name = "style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)"
+
+[[tool.commitizen.customize.questions.choices]]
+key = "r"
+value = "refactor"
+name = "refactor: A code change that neither fixes a bug nor adds a feature"
+
+[[tool.commitizen.customize.questions.choices]]
+key = "p"
+value = "perf"
+name = "perf: A code change that improves performance"
+
+[[tool.commitizen.customize.questions.choices]]
+key = "t"
+value = "test"
+name = "test: Adding missing or correcting existing tests"
+
+[[tool.commitizen.customize.questions.choices]]
+key = "b"
+value = "build"
+name = "build: Changes that affect the build system or external dependencies (example scopes: pip, docker, npm)"
+
+[[tool.commitizen.customize.questions.choices]]
+key = "c"
+value = "ci"
+name = "ci: Changes to CI configuration files and scripts (example scopes: GitLabCI)"
 
 [[tool.commitizen.customize.questions]]
 type = "input"
@@ -112,4 +164,5 @@ dev = [
     "pre-commit>=4.0.1",
     "pytest>=8.3.4",
     "pytest-cov>=6.0.0",
+    "ruff>=0.9.1",
 ]
