@@ -3,9 +3,11 @@ name = "package-c"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-authors = [{ name = "Jens Peder Meldgaard", email = "jpm@halfspace.io" }]
+authors = [
+    { name = "Jens Peder Meldgaard", email = "jenspederm@gmail.com" }
+]
 requires-python = ">=3.11"
-dependencies = ["package-a", "pre-commit>=4.0.1"]
+dependencies = []
 
 [project.scripts]
 package-c = "package_c:main"
@@ -53,7 +55,7 @@ ignore = [
     "D417",
     "E501",
 ] # Ruff format takes care of line-too-long
-exclude = ["notebooks/*", "src/_deprecated/*"]
+exclude = ["notebooks/*"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["D", "UP"]
@@ -61,16 +63,53 @@ exclude = ["notebooks/*", "src/_deprecated/*"]
 convention = "google"
 
 [tool.commitizen]
-name = "cz_conventional_commits"
-tag_format = "$version"
+name = "cz_customize"
+use_shortcuts = true
 version_scheme = "pep440"
 version_provider = "pep621"
 update_changelog_on_bump = true
 major_version_zero = true
-use_shortcuts = true
+bump_message = "bump: package_c version $current_version → $new_version"
+tag_format = "package_c-$version"
 
-[tool.uv.sources]
-package-a = { workspace = true }
+[tool.commitizen.customize]
+message_template = "{{change_type}}(package_c): {{message}}"
+example = "feature: this feature enable customize through config file"
+schema = "<change_type>: <body>"
+schema_pattern = "(feature|bug fix):(\\s.*)"
+bump_pattern = "^(break|new|fix|hotfix)"
+bump_map = { "break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH" }
+change_type_order = ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]
+commit_parser = "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?"
+changelog_pattern = "^(feature|bug fix)?(!)?"
+change_type_map = { "feature" = "Feat", "bug fix" = "Fix" }
+
+[[tool.commitizen.customize.questions]]
+type = "list"
+name = "change_type"
+message = "Select the type of change you are committing"
+choices = [
+    { key = "x", value = "fix", name = "fix: A bug fix. Correlates with PATCH in SemVer" },
+    { key = "f", value = "feat", name = "feat: A new feature. Correlates with MINOR in SemVer" },
+    { key = "d", value = "docs", name = "docs: Documentation only changes" },
+    { key = "s", value = "style", name = "style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)" },
+    { key = "r", value = "refactor", name = "refactor: A code change that neither fixes a bug nor adds a feature" },
+    { key = "p", value = "perf", name = "perf: A code change that improves performance" },
+    { key = "t", value = "test", name = "test: Adding missing or correcting existing tests" },
+    { key = "b", value = "build", name = "build: Changes that affect the build system or external dependencies (example scopes: pip, docker, npm)" },
+    { key = "c", value = "ci", name = "ci: Changes to CI configuration files and scripts (example scopes: GitLabCI)" },
+]
+
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "message"
+message = "Message:"
 
 [dependency-groups]
-dev = ["pytest>=8.3.4", "pytest-cov>=6.0.0"]
+dev = [
+    "commitizen>=4.1.0",
+    "pre-commit>=4.0.1",
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+]
