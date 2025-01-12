@@ -32,6 +32,19 @@ def _render(template_name: str, **kwargs) -> str:
     return template.render(**kwargs)
 
 
+def create_dockerfile(
+    ubuntu_version: str,
+    spark_version: str,
+    uv_version: str,
+):
+    return _render(
+        "Dockerfile.j2",
+        ubuntu_version=ubuntu_version,
+        spark_version=spark_version,
+        uv_version=uv_version,
+    )
+
+
 def create_devcontainer(
     package_name: str,
     dockerfile_path: Path,

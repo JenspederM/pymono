@@ -1,10 +1,15 @@
 from __future__ import annotations
+import shutil
 import subprocess
 import fire
 import yaml
 
 from uvmono.github import find_projects, get_includes, set_github_output
-from uvmono.template import add_project_standards, create_devcontainer
+from uvmono.template import (
+    add_project_standards,
+    create_devcontainer,
+    create_dockerfile,
+)
 from uvmono.types import Include
 from uvmono.utils import find_git_root, has_uv
 
@@ -26,16 +31,20 @@ class UvMono:
 
         self._packages = [p for p in self._packages_root.iterdir() if p.is_dir()]
 
-    def new(self, package_name: str):
+    def new(self, package_name: str, overwrite: bool = False):
         """Create a new package in the mono-repo.
 
         Args:
             package_name (str): The name of the package to create.
+            overwrite (bool, optional): Whether to overwrite the package if it already exists.
         """
         has_uv()
         package_dir = self._packages_root / package_name
-        if package_dir.exists():
+        if package_dir.exists() and not overwrite:
             raise FileExistsError(f"Package {package_name} already exists")
+        elif package_dir.exists() and overwrite:
+            print(f"Overwriting package: {package_name}")
+            shutil.rmtree(package_dir)
         package_dir.mkdir()
         dir_cmd = ["--directory", str(package_dir)]
         default_packages = ["pytest", "pytest-cov", "pre-commit", "commitizen"]
@@ -74,7 +83,7 @@ class UvMono:
         if not package_name and not all:
             return "Either `package_name` or `all` must be set. Use `--help` for more information."
         packages = self.list() if all else [package_name]
-        self._create_docker_compose_file(
+        self._create_dockerfiles(
             ubuntu_version=ubuntu_version,
             spark_version=spark_version,
             uv_version=uv_version,
@@ -109,7 +118,7 @@ class UvMono:
                 f.write(template)
             print(f"Successfully created devcontainer configuration for {package}")
 
-    def _create_docker_compose_file(
+    def _create_dockerfiles(
         self, ubuntu_version, spark_version, uv_version, dry_run=False
     ):
         compose = {
@@ -139,6 +148,14 @@ class UvMono:
             (self._root / ".docker").mkdir()
         with open(self._root / ".docker" / "docker-compose.yml", "w") as f:
             yaml.dump(compose, f, indent=4)
+        dockerfile_path = self._root / ".docker" / "Dockerfile"
+        dockerfile_template = create_dockerfile(
+            ubuntu_version=ubuntu_version,
+            spark_version=spark_version,
+            uv_version=uv_version,
+        )
+        with open(dockerfile_path, "w") as f:
+            f.write(dockerfile_template)
 
     def matrix_strategy(self, key: str, dry_run: bool = False) -> list[Include]:
         """Set the matrix strategy for the mono-repo
