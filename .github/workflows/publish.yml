@@ -1,4 +1,5 @@
-# .github/workflows/ci-cd.yml
+name: Publish
+
 on:
   push:
     branches:
