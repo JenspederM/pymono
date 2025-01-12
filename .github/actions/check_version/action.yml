@@ -57,8 +57,9 @@ runs:
       id: set-changelog
       shell: bash
       run: |
-        changelog=$(cat body.md)
-        echo "changelog=$changelog" >> $GITHUB_OUTPUT
+        echo "changelog<<EOF" >> $GITHUB_ENV
+        echo "$(cat body.md)" >> $GITHUB_ENV
+        echo echo "EOF" >> $GITHUB_ENV
     - name: Find Comment
       if: ${{ inputs.pr_number != '' && steps.cz.outputs.version != steps.project.outputs.old_version }}
       uses: peter-evans/find-comment@v3
