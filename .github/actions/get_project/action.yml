@@ -16,7 +16,7 @@ runs:
   using: composite
   steps:
     - name: Set Name and Version from ${{ inputs.path }}/pyproject.toml to output
-      id: old
+      id: project
       shell: bash
       run: |
         name=$(grep "^name" ${{ inputs.path }}/pyproject.toml -m 1 | tr -s ' ' | tr -d '"' | tr -d "'" | cut -d' ' -f3 | tr "-" "_")
