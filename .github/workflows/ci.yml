@@ -21,7 +21,7 @@ jobs:
         with:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
-      - name: Install the project
+      - name: Install project
         run: uv sync --all-extras --dev
       - name: Create Package Matrix
         id: package_matrix
