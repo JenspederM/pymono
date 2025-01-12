@@ -612,7 +612,7 @@ wheels = [
 
 [[package]]
 name = "uvmono"
-version = "0.3.0"
+version = "0.3.3"
 source = { editable = "." }
 dependencies = [
     { name = "fire" },
