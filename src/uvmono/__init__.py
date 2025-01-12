@@ -38,7 +38,7 @@ class UvMono:
             raise FileExistsError(f"Package {package_name} already exists")
         package_dir.mkdir()
         dir_cmd = ["--directory", str(package_dir)]
-        default_packages = ["pytest", "pytest-cov"]
+        default_packages = ["pytest", "pytest-cov", "pre-commit", "commitizen"]
         subprocess.run(["uv", "init", "--package", *dir_cmd])
         assert (package_dir / "pyproject.toml").exists(), (
             f"Failed to create package: {package_name}"
