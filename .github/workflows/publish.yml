@@ -18,7 +18,7 @@ jobs:
         uses: ./.github/actions/uvtest
         with:
           name: uvmono
-          path: tests
+          path: .
           github_token: ${{ github.token }}
   check_version:
     name: Bump version if necessary
