@@ -5,9 +5,9 @@ Utilities for working with monorepos in Python.
 ## Installation
 
 ```bash
-git clone https://github.com/JenspederM/uvmono
-cd uvmono
-pip install .
+uv init --package
+uv add uvmono
+uv run uvmono --help
 ```
 
 ## Usage
@@ -22,18 +22,16 @@ uvmono list
 # Add a package to the monorepo
 uvmono new <package-name>
 
-# Add dev-containers for a package in the monorepo
-uvmono add-devcontainer <package-name>
-
-# Add dev-containers for all packages in the monorepo
-uvmono add-devcontainer --all
+# Add dev-containers for a package in the monorepo (optionally for all packages)
+uvmono add-devcontainer <package-name> [--all]
 
 # Create a Matrix Strategy for a GitHub Actions workflow
-uvmono matrix_strategy <key-name>
+# The key is the key for the matrix strategy in the GitHub Actions workflow `matrix.<key-name>.path`
+uvmono matrix_strategy <key>
 # Returns a JSON object with the matrix strategy for the packages in the monorepo:
 # {
 #   "matrix": {
-#     "inputs": [ 
+#     <key>: [ 
 #       { 
 #           "path": "packages/package1", 
 #           "name": "package1", 
@@ -131,10 +129,6 @@ jobs:
         uses: dorny/paths-filter@v3
         id: changes
         with:
-          filters: |
-            is_changed:
-              - '${{ matrix.inputs.path }}/**'
-            is_shared_changed:
-              - 'packages/shared/**'
+          filters: ${{ matrix.inputs.filter }}
       ...
 ```

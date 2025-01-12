@@ -1,10 +1,24 @@
+from dataclasses import dataclass
 import json
 import os
 from pathlib import Path
 import tomllib
 
 from uvmono.template import create_filter
-from uvmono.types import Dependency, Project
+
+
+@dataclass
+class Dependency:
+    name: str
+    is_workspace: bool
+
+
+@dataclass
+class Project:
+    name: str
+    version: str
+    path: Path
+    dependencies: list[Dependency]
 
 
 def find_projects(root="."):

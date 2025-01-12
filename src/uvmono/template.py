@@ -1,7 +1,21 @@
 from pathlib import Path
+import tomllib
 from jinja2 import Environment, FileSystemLoader
+import mergedeep
+import tomli_w
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
+
+
+def sync_pyproject(package_dir: Path, package_name: str):
+    tomlpath = package_dir / "pyproject.toml"
+    template_file = _render("pyproject.toml.j2", package_name=package_name)
+    updates = tomllib.loads(template_file)
+    with open(tomlpath, "rb") as f:
+        current = tomllib.load(f)
+    updated = mergedeep.merge(current, updates, strategy=mergedeep.Strategy.REPLACE)
+    with open(tomlpath, "wb") as f:
+        tomli_w.dump(updated, f)
 
 
 def add_project_standards(package_dir: Path):
@@ -58,15 +72,17 @@ def create_devcontainer(
 
 def _create_tests(tests_dir: Path, package_name: str):
     main_template = _render("tests_init.py.j2", package_name=package_name)
+    conftest_template = _render("conftest.py.j2", package_name=package_name)
     tests_dir.mkdir()
     (tests_dir / "__init__.py").write_text("")
-    (tests_dir / "test_main.py").write_text(main_template)
-    (tests_dir / "conftest.py").write_text("import pytest")
+    (tests_dir / "test_main.py").write_text(f"{main_template}\n")
+    (tests_dir / "conftest.py").write_text(f"{conftest_template}\n")
 
 
 def _add_pyproject_defaults(package_dir: Path, package_name: str):
     init_template = _render("package_init.py.j2", package_name=package_name)
-    template_file = _render("pyproject.toml.j2", package_name=package_name)
-    (package_dir / "src" / package_name / "__init__.py").write_text(init_template)
+    init_template_path = package_dir / "src" / package_name / "__init__.py"
+    init_template_path.write_text(f"{init_template}\n")
     with open(package_dir / "pyproject.toml", "a") as fh:
-        fh.write(template_file)
+        pyproject_template = _render("pyproject.toml.j2", package_name=package_name)
+        fh.write(pyproject_template)

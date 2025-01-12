@@ -1,4 +1,5 @@
 from __future__ import annotations
+from dataclasses import dataclass
 import shutil
 import subprocess
 import fire
@@ -9,9 +10,16 @@ from uvmono.template import (
     add_project_standards,
     create_devcontainer,
     create_dockerfile,
+    sync_pyproject,
 )
-from uvmono.types import Include
 from uvmono.utils import find_git_root, has_uv
+
+
+@dataclass
+class Include:
+    path: str
+    name: str
+    dependencies: list[str]
 
 
 class UvMono:
@@ -40,14 +48,14 @@ class UvMono:
         """
         has_uv()
         package_dir = self._packages_root / package_name
-        if package_dir.exists() and not overwrite:
+        if package_dir.exists() and not overwrite and not overwrite:
             raise FileExistsError(f"Package {package_name} already exists")
         elif package_dir.exists() and overwrite:
             print(f"Overwriting package: {package_name}")
             shutil.rmtree(package_dir)
         package_dir.mkdir()
         dir_cmd = ["--directory", str(package_dir)]
-        default_packages = ["pytest", "pytest-cov", "pre-commit", "commitizen"]
+        default_packages = ["pytest", "pytest-cov", "ruff", "pre-commit", "commitizen"]
         subprocess.run(["uv", "init", "--package", *dir_cmd])
         assert (package_dir / "pyproject.toml").exists(), (
             f"Failed to create package: {package_name}"
@@ -55,6 +63,20 @@ class UvMono:
         add_project_standards(package_dir)
         subprocess.run(["uv", "add", *default_packages, "--dev", *dir_cmd])
         self.add_devcontainer(package_name=package_name)
+
+    def sync(self, package_name: str = "", all: bool = False, dry_run: bool = False):
+        if not package_name and not all:
+            return "Either `package_name` or `all` must be set. Use `--help` for more information."
+        packages = self.list() if all else [package_name]
+        for package_name in packages:
+            package_path = self._packages_root / package_name
+            print(f"Syncing pyproject.toml for {package_name}")
+            if not package_path.exists():
+                raise FileNotFoundError(f"Package {package_name} not found")
+            if dry_run:
+                print(f"[DRY_RUN] Would sync pyproject.toml for {package_name}")
+                continue
+            sync_pyproject(package_path, package_name)
 
     def list(self):
         """List the packages in the mono-repo"""

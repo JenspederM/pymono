@@ -1,5 +1,4 @@
-from uvmono.types import Dependency, Project
-from uvmono.github import get_dependents
+from uvmono.github import get_dependents, Project, Dependency
 
 
 def test_get_dependents():
