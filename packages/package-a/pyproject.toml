@@ -19,7 +19,7 @@ requires = [
 build-backend = "hatchling.build"
 
 [tool.pytest.ini_options]
-addopts = "--cov-report=term --cov-report=xml:coverage.xml --cov=package-a -ra\n-vv"
+addopts = "--cov-report=term --cov-report=xml:coverage.xml --cov=package_a -ra\n-vv"
 
 [tool.coverage.report]
 fail_under = 0
@@ -73,14 +73,14 @@ version_scheme = "pep440"
 version_provider = "pep621"
 update_changelog_on_bump = true
 major_version_zero = true
-bump_message = "bump: package-a version $current_version → $new_version"
-tag_format = "package-a-$version"
+bump_message = "bump: package_a $current_version → $new_version"
+tag_format = "package_a-$version"
 
 [tool.commitizen.customize]
-message_template = "{{change_type}}(package-a): {{message}}"
+message_template = "{{change_type}}(package_a): {{message}}"
 example = "feat(<package-name>): this feature enable customize through config file"
-schema = "<change_type>: <body>"
-schema_pattern = "(fix|feat|docs|style|refactor|perf|test|build|ci):(\\s.*)"
+schema = "<change_type>(\\(package_a\\)): <body>"
+schema_pattern = "(fix|feat|docs|style|refactor|perf|test|build|ci)(\\(package_a\\)):(\\s.*)"
 bump_pattern = "^(break|new|fix)"
 change_type_order = [
     "BREAKING CHANGE",
@@ -90,7 +90,7 @@ change_type_order = [
     "perf",
 ]
 commit_parser = "^(?P<change_type>fix|feat|docs|style|refactor|perf|test|build|ci):\\s(?P<message>.*)?"
-changelog_pattern = "^(feat|fix)\\(package-a\\)(!)?:"
+changelog_pattern = "^(feat|fix)\\(package_a\\)(!)?:"
 
 [tool.commitizen.customize.bump_map]
 break = "MAJOR"
@@ -98,8 +98,10 @@ new = "MINOR"
 fix = "PATCH"
 
 [tool.commitizen.customize.change_type_map]
-feature = "Feat"
-"bug fix" = "Fix"
+feat = "Feat"
+fix = "Fix"
+refactor = "Refactor"
+perf = "Perf"
 
 [[tool.commitizen.customize.questions]]
 type = "list"

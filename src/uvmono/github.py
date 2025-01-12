@@ -21,7 +21,7 @@ class Project:
     dependencies: list[Dependency]
 
 
-def find_projects(root="."):
+def find_projects(root=".") -> list[Project]:
     projects = {}
     for toml in Path(root).rglob("pyproject.toml"):
         with open(toml, "rb") as fh:

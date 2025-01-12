@@ -3,8 +3,9 @@ name = "uvmono"
 version = "0.3.7"
 description = "Add your description here"
 readme = "README.md"
-license = { file = "LICENSE" }
-authors = [{ name = "Jens Peder Meldgaard", email = "JensPederM@gmail.com" }]
+authors = [
+    { name = "Jens Peder Meldgaard", email = "JensPederM@gmail.com" },
+]
 requires-python = ">=3.11"
 dependencies = [
     "fire>=0.7.0",
@@ -15,41 +16,45 @@ dependencies = [
     "tomli-w>=1.1.0",
 ]
 
+[project.license]
+file = "LICENSE"
+
 [project.scripts]
 uvmono = "uvmono:main"
 commit = "uvmono:commit"
 
 [build-system]
-requires = ["hatchling"]
+requires = [
+    "hatchling",
+]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.sdist]
-exclude = ["packages", ".docker", ".github", ".devcontainer"]
+exclude = [
+    "packages",
+    ".docker",
+    ".github",
+    ".devcontainer",
+]
 
 [tool.uv.workspace]
 members = [
-    "packages/package-a",
     "packages/package-b",
     "packages/package-c",
     "packages/package-d",
-    "develop-eggs",
+    "develop-eggs", "packages/package-a",
 ]
 
-[dependency-groups]
-dev = ["commitizen>=4.1.0", "pytest>=8.3.4", "pytest-cov>=6.0.0", "ruff>=0.9.1"]
-
 [tool.pytest.ini_options]
-addopts = """
---cov-report=term \
---cov-report=xml:coverage.xml \
---cov=uvmono \
--ra
--vv"""
+addopts = "--cov-report=term --cov-report=xml:coverage.xml --cov=uvmono -ra\n-vv"
 
 [tool.coverage.report]
 fail_under = 0
 show_missing = true
-exclude_lines = ["pragma: no cover", "raise NotImplementedError"]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+]
 
 [tool.commitizen]
 name = "cz_customize"
@@ -67,30 +72,87 @@ example = "feature: this feature enable customize through config file"
 schema = "<change_type>: <body>"
 schema_pattern = "(fix|feat|docs|style|refactor|perf|test|build|ci)(\\(uvmono\\)):(\\s.*)"
 bump_pattern = "^(break|new|fix|hotfix)"
-bump_map = { "break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH" }
-change_type_order = ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]
+change_type_order = [
+    "BREAKING CHANGE",
+    "feat",
+    "fix",
+    "refactor",
+    "perf",
+]
 commit_parser = "^(?P<change_type>fix|feat|docs|style|refactor|perf|test|build|ci):\\s(?P<message>.*)?"
 changelog_pattern = "^(feat|fix)\\(uvmono\\)(!)?:"
-change_type_map = { "feature" = "Feat", "bug fix" = "Fix" }
 
+[tool.commitizen.customize.bump_map]
+break = "MAJOR"
+new = "MINOR"
+fix = "PATCH"
+hotfix = "PATCH"
+
+[tool.commitizen.customize.change_type_map]
+feat = "Feat"
+fix = "Fix"
+refactor = "Refactor"
+perf = "Perf"
 
 [[tool.commitizen.customize.questions]]
 type = "list"
 name = "change_type"
-choices = [
-    { key = "x", value = "fix", name = "fix: A bug fix. Correlates with PATCH in SemVer" },
-    { key = "f", value = "feat", name = "feat: A new feature. Correlates with MINOR in SemVer" },
-    { key = "d", value = "docs", name = "docs: Documentation only changes" },
-    { key = "s", value = "style", name = "style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)" },
-    { key = "r", value = "refactor", name = "refactor: A code change that neither fixes a bug nor adds a feature" },
-    { key = "p", value = "perf", name = "perf: A code change that improves performance" },
-    { key = "t", value = "test", name = "test: Adding missing or correcting existing tests" },
-    { key = "b", value = "build", name = "build: Changes that affect the build system or external dependencies (example scopes: pip, docker, npm)" },
-    { key = "c", value = "ci", name = "ci: Changes to CI configuration files and scripts (example scopes: GitLabCI)" },
-]
 message = "Select the type of change you are committing"
+
+[[tool.commitizen.customize.questions.choices]]
+key = "x"
+value = "fix"
+name = "fix: A bug fix. Correlates with PATCH in SemVer"
+
+[[tool.commitizen.customize.questions.choices]]
+key = "f"
+value = "feat"
+name = "feat: A new feature. Correlates with MINOR in SemVer"
+
+[[tool.commitizen.customize.questions.choices]]
+key = "d"
+value = "docs"
+name = "docs: Documentation only changes"
+
+[[tool.commitizen.customize.questions.choices]]
+key = "s"
+value = "style"
+name = "style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)"
+
+[[tool.commitizen.customize.questions.choices]]
+key = "r"
+value = "refactor"
+name = "refactor: A code change that neither fixes a bug nor adds a feature"
+
+[[tool.commitizen.customize.questions.choices]]
+key = "p"
+value = "perf"
+name = "perf: A code change that improves performance"
+
+[[tool.commitizen.customize.questions.choices]]
+key = "t"
+value = "test"
+name = "test: Adding missing or correcting existing tests"
+
+[[tool.commitizen.customize.questions.choices]]
+key = "b"
+value = "build"
+name = "build: Changes that affect the build system or external dependencies (example scopes: pip, docker, npm)"
+
+[[tool.commitizen.customize.questions.choices]]
+key = "c"
+value = "ci"
+name = "ci: Changes to CI configuration files and scripts (example scopes: GitLabCI)"
 
 [[tool.commitizen.customize.questions]]
 type = "input"
 name = "message"
 message = "Message:"
+
+[dependency-groups]
+dev = [
+    "commitizen>=4.1.0",
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.9.1",
+]

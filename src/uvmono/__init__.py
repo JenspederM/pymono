@@ -2,7 +2,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 import shutil
 import subprocess
+import tomllib
 import fire
+import tomli_w
 import yaml
 
 from uvmono.github import find_projects, get_includes, set_github_output
@@ -43,6 +45,38 @@ class UvMono:
 
         self._packages = [p for p in self._packages_root.iterdir() if p.is_dir()]
 
+    def remove(self, package_name: str):
+        """Remove a package from the mono-repo
+
+        Args:
+            package_name (str): The name of the package to remove.
+        """
+        package_dir = self._packages_root / package_name
+        if not package_dir.exists():
+            raise FileNotFoundError(f"Package {package_name} not found")
+        pyproject = self._root / "pyproject.toml"
+        with open(pyproject, "rb") as f:
+            project = tomllib.load(f)
+        workspace = (
+            project.get("tool", {})
+            .get("uv", {})
+            .get("workspace", {})
+            .get("members", [])
+        )
+        rel = package_dir.relative_to(self._root).as_posix()
+        print(workspace, rel)
+        if rel in workspace:
+            print(f"Removing package from workspace: {package_name}")
+            with open(pyproject, "wb") as f:
+                project["tool"]["uv"]["workspace"]["members"] = [
+                    p for p in workspace if p != rel
+                ]
+                tomli_w.dump(project, f)
+        shutil.rmtree(package_dir)
+        shutil.rmtree(self._root / ".devcontainer" / package_name)
+
+        print(f"Successfully removed package: {package_name}")
+
     def new(self, package_name: str, overwrite: bool = False):
         """Create a new package in the mono-repo.
 
@@ -67,7 +101,7 @@ class UvMono:
         add_project_standards(package_dir)
         subprocess.run(["uv", "add", *default_packages, "--dev", *dir_cmd])
         self.add_devcontainer(package_name=package_name)
-        sync_pyproject(package_dir, package_name)
+        self.sync(package_name=package_name)
 
     def sync(
         self,
@@ -90,7 +124,7 @@ class UvMono:
             if clean:
                 self.new(package_name, overwrite=True)
             else:
-                sync_pyproject(package_path, package_name)
+                sync_pyproject(package_path, package_name.replace("-", "_"))
 
     def list(self):
         """List the packages in the mono-repo"""
