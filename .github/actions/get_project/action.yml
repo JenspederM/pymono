@@ -15,12 +15,12 @@ outputs:
 runs:
   using: composite
   steps:
-    - name: Set Name and Version from ${path}/pyproject.toml to output
+    - name: Set Name and Version from ${{ inputs.path }}/pyproject.toml to output
       id: old
       shell: bash
       run: |
-        name=$(grep "^name" ${path}/pyproject.toml -m 1 | tr -s ' ' | tr -d '"' | tr -d "'" | cut -d' ' -f3 | tr "-" "_")
-        version=$(grep "^version" ${path}/pyproject.toml -m 1 | tr -s ' ' | tr -d '"' | tr -d "'" | cut -d' ' -f3)
+        name=$(grep "^name" ${{ inputs.path }}/pyproject.toml -m 1 | tr -s ' ' | tr -d '"' | tr -d "'" | cut -d' ' -f3 | tr "-" "_")
+        version=$(grep "^version" ${{ inputs.path }}/pyproject.toml -m 1 | tr -s ' ' | tr -d '"' | tr -d "'" | cut -d' ' -f3)
         echo "name=$name" >> $GITHUB_OUTPUT
         echo "version=$version" >> $GITHUB_OUTPUT
         echo "Releasing $name version $version"
