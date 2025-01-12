@@ -135,6 +135,8 @@ class UvMono:
             print("Would create docker-compose.yml with the following content:")
             print(yaml.dump(compose))
             return
+        if not (self._root / ".docker").exists():
+            (self._root / ".docker").mkdir()
         with open(self._root / ".docker" / "docker-compose.yml", "w") as f:
             yaml.dump(compose, f, indent=4)
 
