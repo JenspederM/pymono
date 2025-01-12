@@ -28,11 +28,7 @@ members = [
 ]
 
 [dependency-groups]
-dev = [
-    "commitizen>=4.1.0",
-    "pytest>=8.3.4",
-    "pytest-cov>=6.0.0",
-]
+dev = ["commitizen>=4.1.0", "pytest>=8.3.4", "pytest-cov>=6.0.0"]
 
 [tool.pytest.ini_options]
 addopts = """
@@ -46,3 +42,11 @@ addopts = """
 fail_under = 0
 show_missing = true
 exclude_lines = ["pragma: no cover", "raise NotImplementedError"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "pep440"
+version_provider = "pep621"
+update_changelog_on_bump = true
+major_version_zero = true
