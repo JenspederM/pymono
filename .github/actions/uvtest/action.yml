@@ -18,10 +18,10 @@ runs:
       uses: astral-sh/setup-uv@v4
     - name: Sync
       shell: bash
-      run: uv sync --directory ${{ matrix.inputs.path }} --all-extras --dev
+      run: uv sync --directory ${{ inputs.path }} --all-extras --dev
     - name: Test
       shell: bash
-      run: uv run --directory ${{ matrix.inputs.path }} pytest tests
+      run: uv run --directory ${{ inputs.path }} pytest tests
     - name: Coverage comment
       uses: MishaKav/pytest-coverage-comment@main
       with:
