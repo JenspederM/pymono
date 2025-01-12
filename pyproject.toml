@@ -17,6 +17,7 @@ dependencies = [
 
 [project.scripts]
 uvmono = "uvmono:main"
+commit = "uvmono:commit"
 
 [build-system]
 requires = ["hatchling"]
@@ -35,12 +36,7 @@ members = [
 ]
 
 [dependency-groups]
-dev = [
-    "commitizen>=4.1.0",
-    "pytest>=8.3.4",
-    "pytest-cov>=6.0.0",
-    "ruff>=0.9.1",
-]
+dev = ["commitizen>=4.1.0", "pytest>=8.3.4", "pytest-cov>=6.0.0", "ruff>=0.9.1"]
 
 [tool.pytest.ini_options]
 addopts = """
@@ -69,13 +65,14 @@ tag_format = "uvmono-$version"
 message_template = "{{change_type}}(uvmono): {{message}}"
 example = "feature: this feature enable customize through config file"
 schema = "<change_type>: <body>"
-schema_pattern = "(feature|bug fix):(\\s.*)"
+schema_pattern = "(fix|feat|docs|style|refactor|perf|test|build|ci)(\\(uvmono\\)):(\\s.*)"
 bump_pattern = "^(break|new|fix|hotfix)"
 bump_map = { "break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH" }
 change_type_order = ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]
-commit_parser = "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?"
-changelog_pattern = "^(feature|bug fix)?(!)?"
+commit_parser = "^(?P<change_type>fix|feat|docs|style|refactor|perf|test|build|ci):\\s(?P<message>.*)?"
+changelog_pattern = "^(feat|fix)\\(uvmono\\)(!)?:"
 change_type_map = { "feature" = "Feat", "bug fix" = "Fix" }
+
 
 [[tool.commitizen.customize.questions]]
 type = "list"

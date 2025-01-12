@@ -22,6 +22,10 @@ class Include:
     dependencies: list[str]
 
 
+def commit():
+    subprocess.run(["uv", "run", "cz", "c", "--", "-s"])
+
+
 class UvMono:
     """uvmono is a tool to help manage mono-repos in python"""
 
@@ -63,8 +67,15 @@ class UvMono:
         add_project_standards(package_dir)
         subprocess.run(["uv", "add", *default_packages, "--dev", *dir_cmd])
         self.add_devcontainer(package_name=package_name)
+        sync_pyproject(package_dir, package_name)
 
-    def sync(self, package_name: str = "", all: bool = False, dry_run: bool = False):
+    def sync(
+        self,
+        package_name: str = "",
+        all: bool = False,
+        dry_run: bool = False,
+        clean: bool = False,
+    ):
         if not package_name and not all:
             return "Either `package_name` or `all` must be set. Use `--help` for more information."
         packages = self.list() if all else [package_name]
@@ -76,7 +87,10 @@ class UvMono:
             if dry_run:
                 print(f"[DRY_RUN] Would sync pyproject.toml for {package_name}")
                 continue
-            sync_pyproject(package_path, package_name)
+            if clean:
+                self.new(package_name, overwrite=True)
+            else:
+                sync_pyproject(package_path, package_name)
 
     def list(self):
         """List the packages in the mono-repo"""
