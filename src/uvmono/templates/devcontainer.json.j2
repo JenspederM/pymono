@@ -4,12 +4,12 @@
   "service": "{{ package_name }}",
   "shutdownAction": "none",
   "workspaceFolder": "/workspace/packages/{{ package_name }}",
+  "postStartCommand": "uv sync --cache-dir /workspace/.uv_cache && uv run pre-commit install && uv run pre-commit install --hook-type commit-msg",
   "mounts": [
-    "source={{ package_name }}-bashhistory,target=/home/vscode/commandhistory,type=volume",
+    "source={{ package_name }}-bashhistory,target=/commandhistory,type=volume",
     "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
+    "source=${localEnv:HOME}/.cache,target=/home/vscode/.cache,type=bind,consistency=cached"
   ],
-  "postStartCommand": "uv sync && uv run pre-commit install && uv run pre-commit install --hook-type commit-msg",
-  "postAttachCommand": ". ~/.venv/bin/activate",
   "customizations": {
     "vscode": {
       "extensions": [
