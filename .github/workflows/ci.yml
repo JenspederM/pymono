@@ -54,3 +54,12 @@ jobs:
           name: ${{ matrix.inputs.name }}
           path: ${{ matrix.inputs.path }}
           github_token: ${{ github.token }}
+      - name: Get Name and Version from pyproject.toml to output
+        uses: ./.github/actions/get_project
+        id: project
+        with:
+          path: ${{ matrix.inputs.path }}
+      - name: Print Outputs
+        run: |
+          echo "Name: ${{ steps.project.outputs.name }}"
+          echo "Version: ${{ steps.project.outputs.version }}"

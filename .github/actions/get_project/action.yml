@@ -1,0 +1,26 @@
+name: Check Version
+description: "Check the version of the project and create a bump and changelog"
+inputs:
+  path:
+    description: "The path to the project"
+    required: false
+    default: ${{ github.workspace }}
+outputs:
+  name:
+    description: "The name of the project"
+    value: ${{ steps.project.outputs.name }}
+  version:
+    description: "The old version of the project"
+    value: ${{ steps.project.outputs.version }}
+runs:
+  using: composite
+  steps:
+    - name: Set Name and Version from ${{ inputs.path }}/pyproject.toml to output
+      id: project
+      shell: bash
+      run: |
+        name=$(grep "^name" ${{ inputs.path }}/pyproject.toml -m 1 | tr -s ' ' | tr -d '"' | tr -d "'" | cut -d' ' -f3 | tr "-" "_")
+        version=$(grep "^version" ${{ inputs.path }}/pyproject.toml -m 1 | tr -s ' ' | tr -d '"' | tr -d "'" | cut -d' ' -f3)
+        echo "name=$name" >> $GITHUB_OUTPUT
+        echo "version=$version" >> $GITHUB_OUTPUT
+        echo "Releasing $name version $version"
